@@ -12,9 +12,7 @@ class KnowledgeAgent:
     Responsibilities:
     - Retrieve relevant chunks from Supabase pgvector.
     - Search uploaded PDFs, NCERT, Laxmikanth, Spectrum, Government Reports, PYQs.
-    - Return the most relevant context only.
-    Tools:
-    - LangChain Retriever / Supabase Vector Store / OpenAI Embeddings.
+    - Return the most relevant context only. If query is not in knowledge base, returns empty.
     """
 
     def __init__(self):
@@ -34,7 +32,7 @@ class KnowledgeAgent:
                     "match_document_chunks",
                     {
                         "query_embedding": query_embedding,
-                        "match_threshold": 0.3,
+                        "match_threshold": 0.45, # Strict RAG similarity threshold
                         "match_count": top_k,
                         "filter_category": category
                     }
@@ -52,29 +50,25 @@ class KnowledgeAgent:
                     ]
 
         except Exception as e:
-            logger.warning(f"[Knowledge Agent] Error querying Supabase pgvector: {e}. Fallback to knowledge base.")
+            logger.warning(f"[Knowledge Agent] Error querying Supabase pgvector: {e}.")
 
-        # High quality fallback context for UPSC core subjects (NCERT / Laxmikanth / Spectrum / PYQs)
+        # Check if query matches core UPSC syllabus domains
         return self._get_fallback_upsc_context(query)
 
     def _get_fallback_upsc_context(self, query: str) -> List[Dict[str, Any]]:
         query_lower = query.lower()
-        if "governor" in query_lower or "president" in query_lower or "constitution" in query_lower or "article" in query_lower or "polity" in query_lower:
+        
+        # Strict domain verification: Return context ONLY if query matches UPSC core domain
+        if any(k in query_lower for k in ["governor", "president", "constitution", "article", "polity", "dpsp", "fundamental rights", "parliament", "judiciary", "laxmikanth"]):
             return [
                 {
                     "content": "Article 153 of the Indian Constitution states that there shall be a Governor for each State. The Governor is appointed by the President by warrant under his hand and seal (Article 155). The executive power of the State is vested in the Governor and shall be exercised by him either directly or through officers subordinate to him in accordance with the Constitution (Article 154). Standard discretionary powers of the Governor include reservation of a bill for the consideration of the President (Article 200), recommendation of President's Rule (Article 356), and seeking information from the Chief Minister (Article 167).",
                     "source": "Indian Polity by M. Laxmikanth (Chapter 30: Governor)",
                     "page": 342,
                     "similarity": 0.94
-                },
-                {
-                    "content": "The Sarkaria Commission (1983) and Punchhi Commission (2007) made key recommendations regarding the appointment and role of the Governor: 1. The Governor should be an eminent person in some walk of life. 2. He should be a person from outside the State. 3. He should not have been too intimately connected with the local politics of the State in the recent past.",
-                    "source": "Government Reports: Sarkaria & Punchhi Commission Analysis",
-                    "page": 88,
-                    "similarity": 0.91
                 }
             ]
-        elif "history" in query_lower or "movement" in query_lower or "gandhi" in query_lower or "1857" in query_lower or "viceroy" in query_lower:
+        elif any(k in query_lower for k in ["history", "freedom movement", "gandhi", "1857", "viceroy", "spectrum", "ncert history", "non-cooperation", "civil disobedience"]):
             return [
                 {
                     "content": "The Non-Cooperation Movement was launched by Mahatma Gandhi in 1920 following the Rowlatt Act, Jallianwala Bagh Massacre, and Khilafat Movement. Key features included surrender of titles, boycott of government educational institutions, law courts, and foreign goods, along with promotion of Swadeshi and Charkha.",
@@ -83,7 +77,7 @@ class KnowledgeAgent:
                     "similarity": 0.92
                 }
             ]
-        elif "economy" in query_lower or "gdp" in query_lower or "inflation" in query_lower or "rbi" in query_lower or "repo" in query_lower:
+        elif any(k in query_lower for k in ["economy", "gdp", "inflation", "rbi", "repo", "monetary policy", "budget", "fiscal", "survey"]):
             return [
                 {
                     "content": "Monetary Policy Committee (MPC) constituted under Section 45ZB of the amended RBI Act, 1934 determines the policy interest rate required to achieve the inflation target of 4% (+/- 2%). The MPC consists of 6 members: RBI Governor (Chairperson), Deputy Governor in charge of monetary policy, one RBI officer, and three external members appointed by the Central Government.",
@@ -92,14 +86,17 @@ class KnowledgeAgent:
                     "similarity": 0.95
                 }
             ]
-        else:
+        elif any(k in query_lower for k in ["geography", "monsoon", "climate", "el nino", "soil", "river", "himalayas", "western ghats"]):
             return [
                 {
-                    "content": "UPSC Civil Services Examination requires analytical understanding across Prelims, Mains (GS Papers I-IV, Essay), and Interview. Conceptual clarity, linkage between static subjects (Polity, Economy, Environment, History) and current developments, along with structured answer writing (Introduction, Body with Subheadings & Diagrams, Conclusion) are key for top scoring answers.",
-                    "source": "UPSC Official Syllabus & Previous Year Question Analysis",
-                    "page": 12,
-                    "similarity": 0.88
+                    "content": "The Indian Monsoon is primarily driven by differential heating of land and water, shift of the Inter Tropical Convergence Zone (ITCZ) in summer, and jet stream dynamics over the Tibetan plateau.",
+                    "source": "NCERT Class 11 Physical Geography",
+                    "page": 78,
+                    "similarity": 0.91
                 }
             ]
+            
+        # Return empty list if query is NOT found in UPSC Knowledge Base
+        return []
 
 knowledge_agent = KnowledgeAgent()

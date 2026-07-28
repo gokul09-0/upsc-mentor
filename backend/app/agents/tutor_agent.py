@@ -10,31 +10,36 @@ class TutorAgent:
     """
     Agent 2: Tutor Agent
     Responsibilities:
-    - Explain concepts using retrieved context.
-    - Generate structured answers.
-    - Provide examples.
-    - Explain UPSC relevance (GS Paper, Syllabus topic).
-    - Suggest answer writing improvements.
-    - NEVER perform retrieval directly.
+    - Explain concepts using retrieved context ONLY.
+    - If context is missing/empty, returns explicit Grounded RAG "Not Found in Knowledge Base" alert.
+    - Generate structured answers when context is present.
     """
 
     def __init__(self):
         self.llm = ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
             model=settings.PRIMARY_MODEL,
-            temperature=0.3
+            temperature=0.2
         )
 
     def explain_concept(self, query: str, context_chunks: List[Dict[str, Any]]) -> Dict[str, Any]:
         logger.info(f"[Tutor Agent] Formatting response using {len(context_chunks)} retrieved context chunks.")
         
+        # Grounded RAG Guardrail: If context chunks are empty, return explicit Not Found response
+        if not context_chunks:
+            return {
+                "answer": f"### ⚠️ Topic Not Found in UPSC Knowledge Base\n\nThe query **\"{query}\"** does not exist in the indexed **UPSC Vector Repository** (Laxmikanth, NCERTs, Spectrum, PYQs) or your uploaded study materials.\n\n* 💡 **Recommendation**: Please ask a question directly related to the **UPSC Civil Services Syllabus** (Polity, History, Economy, Geography, Governance) or upload a PDF document using the **Upload PDF** button above to query it via RAG.",
+                "sources": [],
+                "agent_used": "Tutor Agent"
+            }
+
         context_str = "\n\n".join([
             f"--- Document Source: {chunk['source']} (Page {chunk['page']}) ---\n{chunk['content']}"
             for chunk in context_chunks
         ])
 
         system_prompt = """You are the Senior UPSC Mentor AI, an expert evaluator and teacher for the Civil Services Examination (IAS/IPS/IFS).
-Your duty is to deliver a flawless, high-scoring structured response based EXCLUSIVELY on the retrieved study materials provided below.
+Your duty is to deliver a structured response based EXCLUSIVELY on the retrieved study materials provided below.
 
 Rules for your response:
 1. **Structure your answer like a top UPSC Mains Candidate**:
@@ -46,7 +51,7 @@ Rules for your response:
 
 2. Always cite your source documents accurately at the end of key points using [Source Name, Page X].
 
-DO NOT perform any web searches or invent unverified facts. Use the context provided below.
+If the context does not contain relevant information, state that the concept is not present in the reference documents.
 """
 
         user_prompt = f"""Student Question: {query}
@@ -80,8 +85,11 @@ Retrieved UPSC Context:
         }
 
     def _fallback_response(self, query: str, context_chunks: List[Dict[str, Any]]) -> str:
-        ctx_summary = context_chunks[0]["content"] if context_chunks else "Standard UPSC Civil Services syllabus guidelines."
-        src_name = context_chunks[0]["source"] if context_chunks else "Standard Core Reference"
+        if not context_chunks:
+            return f"### ⚠️ Topic Not Found in UPSC Knowledge Base\n\nThe topic **\"{query}\"** is not present in the reference materials."
+
+        ctx_summary = context_chunks[0]["content"]
+        src_name = context_chunks[0]["source"]
         
         return f"""### 📌 Core Concept Explanation
 
@@ -91,13 +99,12 @@ Retrieved UPSC Context:
 
 ### 🏛️ UPSC Syllabus Relevance
 * **GS Paper**: GS Paper II / GS Paper III (Depending on core theme)
-* **Topic Focus**: Statutory, Regulatory & Constitutional Bodies / Indian Economy / Modern Indian History
+* **Topic Focus**: Core Syllabus Reference
 
 ---
 
 ### 💡 UPSC Mains Answer Writing Pro-Tip
 * **Presentation**: Structure your answer into clear headings: *Background, Core Provisions, Challenges, and Recommendations*.
-* **Enrichment**: Always cite landmark judgments, Law Commission reports, or Parliamentary Committee findings to boost your score by 1.5 - 2 marks per answer!
 
 *(Reference: {src_name})*
 """

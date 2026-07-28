@@ -22,15 +22,18 @@ class IntentRouter:
     def classify_intent(self, query: str) -> str:
         q_lower = query.lower()
         
-        # Rule-based fast paths
-        if any(w in q_lower for w in ["test", "quiz", "mcq", "mock", "practice question", "question bank"]):
-            logger.info(f"[Router] Query classified as 'mock_test' via keyword rule.")
-            return "mock_test"
-            
-        if any(w in q_lower for w in ["recent", "latest", "news", "current affairs", "pib", "budget 20", "scheme", "judgment", "supreme court 20", "today", "yesterday", "2024", "2025", "2026"]):
+        # 1. Current Affairs Rule Check
+        if any(w in q_lower for w in ["recent", "latest", "news", "current affairs", "pib", "budget", "scheme", "judgment", "supreme court", "today", "yesterday", "2024", "2025", "2026"]):
             logger.info(f"[Router] Query classified as 'current_affairs' via keyword rule.")
             return "current_affairs"
 
+        # 2. Mock Test Rule Check (avoid matching 'test' inside 'latest')
+        test_keywords = ["mock test", "quiz", "mcq", "question bank", "practice question", "generate test", "create test", "take test", "exam test"]
+        if any(w in q_lower for w in test_keywords) or ((" test" in q_lower or "test " in q_lower) and "latest" not in q_lower):
+            logger.info(f"[Router] Query classified as 'mock_test' via keyword rule.")
+            return "mock_test"
+
+        # 3. Concept Rule Check
         if any(w in q_lower for w in ["article", "constitution", "laxmikanth", "history", "ncert", "spectrum", "explain", "what is", "define", "pyq"]):
             logger.info(f"[Router] Query classified as 'concept' via keyword rule.")
             return "concept"

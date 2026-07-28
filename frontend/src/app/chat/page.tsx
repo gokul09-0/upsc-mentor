@@ -1,23 +1,18 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Navbar } from '@/components/layout/navbar';
 import { 
   Send, 
-  Sparkles, 
   Paperclip, 
   Copy, 
-  RefreshCw, 
   Check, 
-  BookOpen, 
-  Search, 
-  BrainCircuit, 
   FileText,
   ExternalLink,
-  Bot,
-  User,
-  ShieldCheck
+  BrainCircuit,
+  RefreshCw
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { sendChatMessage } from '@/lib/api';
@@ -31,12 +26,16 @@ interface Message {
   intent?: string;
 }
 
-export default function ChatPage() {
+function ChatPageContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams ? searchParams.get('q') : null;
+  const initialHandledRef = useRef(false);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome-msg',
       role: 'assistant',
-      content: `### 👋 Welcome to UPSC AI Mentor!
+      content: `### 👋 Welcome to UPSC AI Mentor (Doubts Desk)!
 
 I am your multi-agent AI tutor orchestrated by **LangGraph**. Here is how my specialized agents assist you:
 
@@ -105,6 +104,14 @@ How can I help your preparation today?`,
     }
   };
 
+  // Automatically execute query when user comes from "Resume Lesson" or external links with ?q=...
+  useEffect(() => {
+    if (initialQuery && !initialHandledRef.current) {
+      initialHandledRef.current = true;
+      handleSend(initialQuery);
+    }
+  }, [initialQuery]);
+
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
@@ -131,20 +138,20 @@ How can I help your preparation today?`,
   };
 
   return (
-    <div className="flex h-screen bg-slate-950">
+    <div className="flex h-screen bg-[#f4f1ea] text-[#19241d]">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Navbar />
 
         <div className="flex-1 flex flex-col max-w-5xl w-full mx-auto p-4 md:p-6 overflow-hidden">
-          {/* Chat Control Toolbar */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4 text-xs">
+          {/* Toolbar */}
+          <div className="flex items-center justify-between pb-3 border-b border-[#e4dec8] mb-4 text-xs">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 font-medium">Context Filter:</span>
+              <span className="text-[#445249] font-medium">Subject Filter:</span>
               <select
                 value={subjectFilter}
                 onChange={(e) => setSubjectFilter(e.target.value)}
-                className="bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg border border-slate-800 focus:outline-none focus:border-sky-500"
+                className="bg-white text-[#19241d] text-xs px-3 py-1.5 rounded-lg border border-[#e4dec8] focus:outline-none focus:border-[#22352a]"
               >
                 <option value="All Subjects">All UPSC Core Subjects</option>
                 <option value="Polity">Indian Polity (Laxmikanth)</option>
@@ -155,9 +162,8 @@ How can I help your preparation today?`,
               </select>
             </div>
 
-            {/* Upload PDF button */}
-            <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 hover:bg-indigo-500/20 transition-colors">
-              <Paperclip className="w-3.5 h-3.5" />
+            <label className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#22352a] text-white hover:bg-[#2e4739] transition-colors shadow-sm">
+              <Paperclip className="w-3.5 h-3.5 text-amber-400" />
               <span>{uploadingPdf ? 'Indexing PDF...' : 'Upload PDF Document'}</span>
               <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} />
             </label>
@@ -171,32 +177,32 @@ How can I help your preparation today?`,
                 className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.role === 'assistant' && (
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-white shrink-0 shadow-md">
-                    <Bot className="w-4 h-4" />
+                  <div className="w-8 h-8 rounded-full bg-[#22352a] text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 shadow-md">
+                    ◆
                   </div>
                 )}
 
                 <div
-                  className={`max-w-3xl rounded-2xl p-4 text-xs leading-relaxed ${
+                  className={`max-w-3xl rounded-2xl p-5 text-xs leading-relaxed ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-r from-sky-600 to-indigo-600 text-white shadow-lg'
-                      : 'glass-card border border-slate-800 text-slate-200'
+                      ? 'bg-[#1a2536] text-white shadow-md'
+                      : 'bg-white border border-[#e4dec8] text-[#19241d] shadow-sm'
                   }`}
                 >
                   {/* Agent Metadata Badge */}
                   {msg.role === 'assistant' && msg.agent_used && (
-                    <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-800">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded-full border border-sky-500/20">
-                        <BrainCircuit className="w-3 h-3" />
+                    <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#e4dec8]">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#22352a] bg-[#22352a]/10 px-2.5 py-0.5 rounded-full">
+                        <BrainCircuit className="w-3 h-3 text-[#22352a]" />
                         <span>Orchestrated by {msg.agent_used}</span>
                       </span>
 
                       <button
                         onClick={() => handleCopy(msg.content, msg.id)}
-                        className="text-slate-400 hover:text-white flex items-center gap-1 text-[11px]"
+                        className="text-[#78877d] hover:text-[#19241d] flex items-center gap-1 text-[11px]"
                       >
                         {copiedId === msg.id ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
                         ) : (
                           <Copy className="w-3.5 h-3.5" />
                         )}
@@ -204,28 +210,26 @@ How can I help your preparation today?`,
                     </div>
                   )}
 
-                  {/* Markdown Content */}
-                  <div className="prose prose-invert prose-xs max-w-none space-y-2">
+                  <div className="prose prose-xs max-w-none space-y-2">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
 
-                  {/* Sources Citations */}
                   {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-slate-800/80">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    <div className="mt-4 pt-3 border-t border-[#f0ece1]">
+                      <p className="text-[10px] font-bold text-[#78877d] uppercase tracking-wider mb-1.5">
                         Verified Sources & Citations:
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {msg.sources.map((src, i) => (
                           <div
                             key={i}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[10px] text-slate-300"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#f7f4ef] border border-[#e4dec8] text-[10px] text-[#445249]"
                           >
-                            <FileText className="w-3 h-3 text-sky-400" />
+                            <FileText className="w-3 h-3 text-[#22352a]" />
                             <span>{src.title}</span>
-                            {src.page && <span className="text-slate-500">(Page {src.page})</span>}
+                            {src.page && <span className="text-[#78877d]">(Page {src.page})</span>}
                             {src.url && (
-                              <a href={src.url} target="_blank" rel="noreferrer" className="text-sky-400 hover:underline">
+                              <a href={src.url} target="_blank" rel="noreferrer" className="text-[#22352a] font-bold hover:underline">
                                 <ExternalLink className="w-2.5 h-2.5 ml-0.5 inline" />
                               </a>
                             )}
@@ -237,8 +241,8 @@ How can I help your preparation today?`,
                 </div>
 
                 {msg.role === 'user' && (
-                  <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shrink-0 shadow-md">
-                    <User className="w-4 h-4" />
+                  <div className="w-8 h-8 rounded-full bg-[#c89b58] text-[#19241d] font-serif font-bold flex items-center justify-center text-xs shrink-0 shadow-md">
+                    G
                   </div>
                 )}
               </div>
@@ -246,11 +250,11 @@ How can I help your preparation today?`,
 
             {loading && (
               <div className="flex gap-3 justify-start">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-white shrink-0 animate-pulse">
-                  <Bot className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-full bg-[#22352a] text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 animate-pulse">
+                  ◆
                 </div>
-                <div className="glass-card p-4 rounded-2xl border border-slate-800 text-xs text-slate-400 flex items-center gap-3">
-                  <RefreshCw className="w-4 h-4 animate-spin text-sky-400" />
+                <div className="bg-white p-4 rounded-2xl border border-[#e4dec8] text-xs text-[#78877d] flex items-center gap-3">
+                  <RefreshCw className="w-4 h-4 animate-spin text-[#22352a]" />
                   <span>LangGraph Router evaluating intent & invoking agents...</span>
                 </div>
               </div>
@@ -258,49 +262,57 @@ How can I help your preparation today?`,
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggested Prompts Pill */}
+          {/* Quick Prompts */}
           <div className="my-3 flex items-center gap-2 overflow-x-auto pb-1 text-[11px] no-scrollbar">
-            <span className="text-slate-500 shrink-0 font-medium">Quick Prompts:</span>
+            <span className="text-[#78877d] shrink-0 font-medium">Quick Prompts:</span>
             <button
               onClick={() => handleSend("Explain Article 200 Governor's discretion on bills")}
-              className="shrink-0 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-colors"
+              className="shrink-0 px-3 py-1 rounded-full bg-white border border-[#e4dec8] hover:border-[#22352a] text-[#445249] transition-colors"
             >
               Governor Discretion (Polity)
             </button>
             <button
               onClick={() => handleSend("What are the latest PIB releases on Union Budget 2025?")}
-              className="shrink-0 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-colors"
+              className="shrink-0 px-3 py-1 rounded-full bg-white border border-[#e4dec8] hover:border-[#22352a] text-[#445249] transition-colors"
             >
               Latest PIB Union Budget
             </button>
             <button
               onClick={() => handleSend("Generate 5 MCQs on Monetary Policy Committee")}
-              className="shrink-0 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 transition-colors"
+              className="shrink-0 px-3 py-1 rounded-full bg-[#22352a] text-white hover:bg-[#2e4739] transition-colors font-bold"
             >
               Generate Economy Quiz
             </button>
           </div>
 
           {/* Chat Input Bar */}
-          <div className="glass-panel p-2 rounded-2xl border border-slate-800 flex items-center gap-2">
+          <div className="bg-white p-2.5 rounded-2xl border border-[#e4dec8] shadow-sm flex items-center gap-2">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Ask any UPSC concept, request MCQs, or search recent PIB news..."
-              className="flex-1 bg-transparent text-xs text-white placeholder-slate-500 px-3 py-2 focus:outline-none"
+              className="flex-1 bg-transparent text-xs text-[#19241d] placeholder-[#78877d] px-3 py-2 focus:outline-none"
             />
             <button
               onClick={() => handleSend()}
               disabled={loading || !input.trim()}
-              className="p-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:opacity-90 disabled:opacity-50 transition-opacity shadow-md shadow-indigo-500/20"
+              className="p-3 rounded-xl bg-[#22352a] hover:bg-[#2e4739] text-white disabled:opacity-50 transition-opacity shadow-sm"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4 text-amber-400" />
             </button>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f4f1ea] flex items-center justify-center text-xs font-bold text-[#19241d]">Loading AI Doubts Desk...</div>}>
+      <ChatPageContent />
+    </Suspense>
   );
 }

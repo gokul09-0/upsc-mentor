@@ -1,6 +1,14 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import jwt, JWTError
+try:
+    from jose import jwt, JWTError
+except ImportError:
+    try:
+        import jwt
+        JWTError = Exception
+    except ImportError:
+        jwt = None
+        JWTError = Exception
 import httpx
 from app.core.config import settings
 
@@ -13,6 +21,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     token = credentials.credentials
     try:
         # Verify JWT against Supabase secret or fallback decode for local dev
+        if not jwt:
+            raise Exception("JWT module unavailable")
         payload = jwt.decode(
             token,
             settings.SUPABASE_KEY,

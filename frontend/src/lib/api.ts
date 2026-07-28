@@ -142,7 +142,18 @@ export async function fetchProgressSummary() {
 
 function simulateChatResponse(message: string) {
   const msgLower = message.toLowerCase();
-  if (msgLower.includes('test') || msgLower.includes('quiz') || msgLower.includes('mcq')) {
+  if (msgLower.includes('recent') || msgLower.includes('latest') || msgLower.includes('pib') || msgLower.includes('budget') || msgLower.includes('news') || msgLower.includes('current')) {
+    return {
+      session_id: 'session-demo',
+      intent: 'current_affairs',
+      agent_used: 'Research Agent',
+      response: `### 📰 Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights:\n- **Government Policy**: PIB press release highlights strategic digital transformation, Union Budget 2025 updates, and inclusive development initiatives.\n- **UPSC Significance**: Direct relevance to GS Paper II (Governance) & GS Paper III (Economic Development).\n\n#### 🔗 Verified Live Citations:\n- [Press Information Bureau (PIB) Official Release](https://pib.gov.in)\n- [The Hindu Current Affairs Commentary](https://thehindu.com)`,
+      sources: [
+        { title: 'Press Information Bureau (PIB)', url: 'https://pib.gov.in' },
+        { title: 'The Hindu Editorial', url: 'https://thehindu.com' }
+      ]
+    };
+  } else if (msgLower.includes('mock') || msgLower.includes('quiz') || msgLower.includes('mcq') || msgLower.includes('practice question') || msgLower.includes('question bank')) {
     return {
       session_id: 'session-demo',
       intent: 'mock_test',
@@ -150,27 +161,29 @@ function simulateChatResponse(message: string) {
       response: '### 📝 Generated UPSC Prelims Practice Test\n\nI have generated a 5-question test for you on General Studies. Click over to the **Mock Test** page in the sidebar to complete it with instant evaluation!',
       sources: [{ title: 'UPSC AI Test Generator', url: '/mock-test' }]
     };
-  } else if (msgLower.includes('recent') || msgLower.includes('pib') || msgLower.includes('budget') || msgLower.includes('news') || msgLower.includes('current')) {
-    return {
-      session_id: 'session-demo',
-      intent: 'current_affairs',
-      agent_used: 'Research Agent',
-      response: `### 📰 Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights:\n- **Government Policy**: PIB press release highlights strategic digital transformation and inclusive development initiatives.\n- **UPSC Significance**: Direct relevance to GS Paper II (Governance) & GS Paper III (Economic Development).\n\n#### 🔗 Verified Live Citations:\n- [Press Information Bureau (PIB) Official Release](https://pib.gov.in)\n- [The Hindu Current Affairs Commentary](https://thehindu.com)`,
-      sources: [
-        { title: 'Press Information Bureau (PIB)', url: 'https://pib.gov.in' },
-        { title: 'The Hindu Editorial', url: 'https://thehindu.com' }
-      ]
-    };
   } else {
-    return {
-      session_id: 'session-demo',
-      intent: 'concept',
-      agent_used: 'Tutor Agent',
-      response: `### 📌 UPSC Concept Analysis: ${message}\n\n#### 1. Core Definition & Background\nUnder the Indian Constitutional framework, this concept forms a vital pillar of governance and institutional integrity.\n\n#### 2. Key Provisions & Constitutional Articles\n- **Constitutional Basis**: Direct provisions under Articles 14, 19, and 21 ensuring rule of law and fundamental freedoms.\n- **Judicial Directives**: Landmark Supreme Court rulings emphasize constitutionalism and administrative accountability.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Mains Structuring**: Always introduce with constitutional definitions, use a flow diagram for structural provisions, and conclude with a forward-looking recommendation citing Law Commission reports.`,
-      sources: [
-        { title: 'Indian Polity by M. Laxmikanth', page: 142 },
-        { title: 'NCERT Class 11 Political Theory', page: 88 }
-      ]
-    };
+    const qLower = message.toLowerCase();
+    const isUpscTopic = ['governor', 'president', 'constitution', 'article', 'polity', 'dpsp', 'fundamental rights', 'history', 'gandhi', '1857', 'viceroy', 'economy', 'gdp', 'inflation', 'rbi', 'repo', 'monetary policy', 'geography', 'monsoon', 'climate', 'river', 'himalayas', 'spectrum', 'laxmikanth', 'ncert', 'pyq'].some(k => qLower.includes(k));
+
+    if (isUpscTopic) {
+      return {
+        session_id: 'session-demo',
+        intent: 'concept',
+        agent_used: 'Tutor Agent',
+        response: `### 📌 UPSC Concept Analysis: ${message}\n\n#### 1. Core Definition & Background\nUnder the Indian Constitutional framework, this concept forms a vital pillar of governance and institutional integrity.\n\n#### 2. Key Provisions & Constitutional Articles\n- **Constitutional Basis**: Direct provisions under Articles 14, 19, and 21 ensuring rule of law and fundamental freedoms.\n- **Judicial Directives**: Landmark Supreme Court rulings emphasize constitutionalism and administrative accountability.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Mains Structuring**: Always introduce with constitutional definitions, use a flow diagram for structural provisions, and conclude with a forward-looking recommendation citing Law Commission reports.`,
+        sources: [
+          { title: 'Indian Polity by M. Laxmikanth', page: 142 },
+          { title: 'NCERT Class 11 Political Theory', page: 88 }
+        ]
+      };
+    } else {
+      return {
+        session_id: 'session-demo',
+        intent: 'concept',
+        agent_used: 'Tutor Agent',
+        response: `### ⚠️ Topic Not Found in UPSC Knowledge Base\n\nThe topic **"${message}"** does not exist in the indexed **UPSC Vector Repository** (Laxmikanth, NCERTs, Spectrum, PYQs) or your uploaded study materials.\n\n* 💡 **Recommendation**: Please ask a question directly related to the **UPSC Civil Services Syllabus** (Polity, History, Economy, Geography, Governance) or upload a PDF document using the **Upload PDF** button above to query it via RAG.`,
+        sources: []
+      };
+    }
   }
 }
