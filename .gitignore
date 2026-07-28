@@ -1,0 +1,33 @@
+# Environment & Secret Files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Dependencies
+node_modules/
+venv/
+env/
+ENV/
+.venv
+
+# Python Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Next.js Build Output
+frontend/.next/
+frontend/out/
+.next/
+out/
+
+# IDE & OS Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
