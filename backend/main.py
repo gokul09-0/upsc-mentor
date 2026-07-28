@@ -38,6 +38,26 @@ app.add_middleware(
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+import time
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+# Global Request Timing & Quality Tracking Middleware
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    try:
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        response.headers["X-Process-Time"] = f"{process_time:.4f}s"
+        return response
+    except Exception as exc:
+        logger.error(f"[Global Exception Handler] Unhandled error: {exc}", exc_info=True)
+        return JSONResponse(
+            status_code=500,
+            content={"message": "Internal Server Error", "detail": str(exc)}
+        )
+
 @app.get("/")
 async def root():
     return {
@@ -52,7 +72,8 @@ async def health_check():
     return {
         "status": "healthy",
         "supabase": "connected" if settings.SUPABASE_URL else "mock",
-        "langsmith_tracing": settings.LANGCHAIN_TRACING_V2
+        "langsmith_tracing": settings.LANGCHAIN_TRACING_V2,
+        "project": settings.LANGCHAIN_PROJECT
     }
 
 if __name__ == "__main__":

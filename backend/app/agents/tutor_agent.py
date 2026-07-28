@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from app.core.config import settings
@@ -22,13 +22,15 @@ class TutorAgent:
             temperature=0.2
         )
 
-    def explain_concept(self, query: str, context_chunks: List[Dict[str, Any]]) -> Dict[str, Any]:
-        logger.info(f"[Tutor Agent] Formatting response using {len(context_chunks)} retrieved context chunks.")
+    def explain_concept(self, query: Optional[str], context_chunks: Optional[List[Dict[str, Any]]]) -> Dict[str, Any]:
+        safe_query = (query or "").strip()
+        safe_chunks = context_chunks if isinstance(context_chunks, list) else []
+        logger.info(f"[Tutor Agent] Formatting response for query '{safe_query[:50]}' using {len(safe_chunks)} retrieved context chunks.")
         
         # Grounded RAG Guardrail: If context chunks are empty, return explicit Not Found response
-        if not context_chunks:
+        if not safe_chunks:
             return {
-                "answer": f"### ⚠️ Topic Not Found in UPSC Knowledge Base\n\nThe query **\"{query}\"** does not exist in the indexed **UPSC Vector Repository** (Laxmikanth, NCERTs, Spectrum, PYQs) or your uploaded study materials.\n\n* 💡 **Recommendation**: Please ask a question directly related to the **UPSC Civil Services Syllabus** (Polity, History, Economy, Geography, Governance) or upload a PDF document using the **Upload PDF** button above to query it via RAG.",
+                "answer": f"### ⚠️ Topic Not Found in UPSC Knowledge Base\n\nThe query **\"{safe_query or 'N/A'}\"** does not exist in the indexed **UPSC Vector Repository** (Laxmikanth, NCERTs, Spectrum, PYQs) or your uploaded study materials.\n\n* 💡 **Recommendation**: Please ask a question directly related to the **UPSC Civil Services Syllabus** (Polity, History, Economy, Geography, Governance) or upload a PDF document using the **Upload PDF** button above to query it via RAG.",
                 "sources": [],
                 "agent_used": "Tutor Agent"
             }

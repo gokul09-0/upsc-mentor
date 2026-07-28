@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from tavily import TavilyClient
 from langchain_openai import ChatOpenAI
 from app.core.config import settings
@@ -17,7 +17,7 @@ class ResearchAgent:
     - NEVER use the vector database.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.tavily_client = TavilyClient(api_key=settings.TAVILY_API_KEY) if settings.TAVILY_API_KEY else None
         self.llm = ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
@@ -25,8 +25,9 @@ class ResearchAgent:
             temperature=0.2
         )
 
-    def search_and_summarize(self, query: str) -> Dict[str, Any]:
-        logger.info(f"[Research Agent] Executing live web search for: '{query}'")
+    def search_and_summarize(self, query: Optional[str]) -> Dict[str, Any]:
+        clean_query = (query or "").strip()
+        logger.info(f"[Research Agent] Executing live web search for: '{clean_query[:50]}'")
         search_results = []
         
         try:
