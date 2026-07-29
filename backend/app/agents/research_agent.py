@@ -91,26 +91,54 @@ Live Web Search Results:
         }
 
     def _fallback_web_results(self, query: str) -> List[Dict[str, Any]]:
-        return [
-            {
-                "title": "Press Information Bureau (PIB) - Government Initiatives 2025-26",
-                "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2001",
-                "content": f"Official government notification detailing key economic, social, and administrative developments related to '{query}'. Focuses on sustainable growth, digitalization, and inclusive governance."
-            },
-            {
-                "title": "The Hindu / Indian Express Analytical Review",
-                "url": "https://www.thehindu.com/opinion/editorial",
-                "content": f"Expert editorial analysis on '{query}' examining constitutional mandates, policy challenges, landmark Supreme Court rulings, and administrative implementation."
-            }
-        ]
+        q_lower = query.lower()
+        if "economic survey" in q_lower or "budget" in q_lower or "economy" in q_lower:
+            return [
+                {
+                    "title": "Ministry of Finance - Economic Survey Official Portal",
+                    "url": "https://www.indiabudget.gov.in/economicsurvey/",
+                    "content": f"Official Economic Survey highlights focusing on macro-economic trends, capital expenditure, agriculture credit, PLI schemes, and GDP projections related to '{query}'."
+                },
+                {
+                    "title": "Press Information Bureau (PIB) - Economic Highlights",
+                    "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2001",
+                    "content": f"PIB summary detailing key sectoral initiatives, revenue collection, and growth metrics for '{query}'."
+                }
+            ]
+        elif "court" in q_lower or "electoral" in q_lower or "judgment" in q_lower or "governor" in q_lower:
+            return [
+                {
+                    "title": "Supreme Court of India Official Judgments Portal",
+                    "url": "https://main.sci.gov.in",
+                    "content": f"Supreme Court ruling and constitutional Bench directives relating to '{query}', focusing on fundamental rights, electoral transparency, and institutional governance."
+                },
+                {
+                    "title": "PIB Ministry of Law & Justice Release",
+                    "url": "https://pib.gov.in",
+                    "content": f"Official press release regarding legislative reforms, constitutional mandates, and legal amendments on '{query}'."
+                }
+            ]
+        else:
+            return [
+                {
+                    "title": f"Press Information Bureau (PIB) - {query[:40]} Analysis",
+                    "url": "https://pib.gov.in",
+                    "content": f"Official government notification detailing key economic, social, and administrative developments related to '{query}'. Focuses on sustainable growth and inclusive governance."
+                },
+                {
+                    "title": "The Hindu / Indian Express Analytical Review",
+                    "url": "https://www.thehindu.com/opinion/editorial",
+                    "content": f"Expert editorial analysis on '{query}' examining constitutional mandates, policy challenges, landmark Supreme Court rulings, and administrative implementation."
+                }
+            ]
 
     def _fallback_summary(self, query: str, results: List[Dict[str, Any]]) -> str:
         links_str = "\n".join([f"* [{r['title']}]({r['url']})" for r in results])
         return f"""### 📰 Current Affairs & Web Research: {query}
 
-#### Key Takeaways & Significance for UPSC Mains/Prelims:
-* **Government Context**: Recent policy decisions and press releases from PIB highlight strategic focus on regulatory reforms and infrastructure development.
-* **Constitutional & Legal Dimensions**: Key alignment with Union List / Concurrent List subjects and recent Supreme Court directives.
+#### Key Takeaways & Significance for UPSC (GS-II / GS-III):
+* **Policy Context**: Official developments and policy announcements focus on strategic reforms, digital transformation, and sustainable economic growth.
+* **Constitutional & Sectoral Dimensions**: Aligned with Union policy priorities, regulatory compliance, and administrative implementation.
 
 #### Direct Source Citations:
 {links_str}

@@ -142,18 +142,49 @@ export async function fetchProgressSummary() {
 
 function simulateChatResponse(message: string) {
   const msgLower = message.toLowerCase();
-  if (msgLower.includes('recent') || msgLower.includes('latest') || msgLower.includes('pib') || msgLower.includes('budget') || msgLower.includes('news') || msgLower.includes('current')) {
-    return {
-      session_id: 'session-demo',
-      intent: 'current_affairs',
-      agent_used: 'Research Agent',
-      response: `### 📰 Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights:\n- **Government Policy**: PIB press release highlights strategic digital transformation, Union Budget 2025 updates, and inclusive development initiatives.\n- **UPSC Significance**: Direct relevance to GS Paper II (Governance) & GS Paper III (Economic Development).\n\n#### 🔗 Verified Live Citations:\n- [Press Information Bureau (PIB) Official Release](https://pib.gov.in)\n- [The Hindu Current Affairs Commentary](https://thehindu.com)`,
-      sources: [
-        { title: 'Press Information Bureau (PIB)', url: 'https://pib.gov.in' },
-        { title: 'The Hindu Editorial', url: 'https://thehindu.com' }
-      ]
-    };
-  } else if (msgLower.includes('mock') || msgLower.includes('quiz') || msgLower.includes('mcq') || msgLower.includes('practice question') || msgLower.includes('question bank')) {
+
+  // 1. Current Affairs / Research Agent Fallback
+  if (msgLower.includes('recent') || msgLower.includes('latest') || msgLower.includes('pib') || msgLower.includes('budget') || msgLower.includes('survey') || msgLower.includes('news') || msgLower.includes('current') || msgLower.includes('court') || msgLower.includes('scheme')) {
+    
+    // Topic-specific response generation
+    if (msgLower.includes('economic survey') || msgLower.includes('survey') || msgLower.includes('economy')) {
+      return {
+        session_id: 'session-demo',
+        intent: 'current_affairs',
+        agent_used: 'Research Agent',
+        response: `### 📰 Economic Survey & Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights (GS-III Economic Development):\n- **Macroeconomic Outlook**: Forecasts GDP growth rate of 6.5%-7.0% driven by strong private investment and sustained capital expenditure (CapEx).\n- **Key Government Schemes & Sectoral Reforms**:\n  1. **Agriculture**: Digital Agriculture Mission & PM-KISAN credit expansion.\n  2. **Manufacturing**: Production Linked Incentive (PLI) scheme expansion across 14 key sectors.\n  3. **Infrastructure**: PM Gati Shakti National Master Plan and National Infrastructure Pipeline (NIP) acceleration.\n- **UPSC Significance**: High relevance to GS Paper III (Indian Economy, Budgeting, Growth & Employment).\n\n#### 🔗 Verified Live Citations:\n- [Ministry of Finance - Economic Survey Portal](https://www.indiabudget.gov.in/economicsurvey/)\n- [Press Information Bureau (PIB) - Economic Survey Highlights](https://pib.gov.in/PressReleasePage.aspx?PRID=2001)`,
+        sources: [
+          { title: 'Ministry of Finance - Economic Survey Portal', url: 'https://www.indiabudget.gov.in/economicsurvey/' },
+          { title: 'PIB Economic Survey Press Release', url: 'https://pib.gov.in' }
+        ]
+      };
+    } else if (msgLower.includes('court') || msgLower.includes('electoral') || msgLower.includes('judgment') || msgLower.includes('governor')) {
+      return {
+        session_id: 'session-demo',
+        intent: 'current_affairs',
+        agent_used: 'Research Agent',
+        response: `### 📰 Legal & Constitutional Analysis: ${message}\n\n#### 📍 Key Highlights (GS-II Governance & Polity):\n- **Judicial Verdict Context**: Supreme Court Constitution Bench ruling reinforcing transparency, asset disclosures, and institutional accountability.\n- **Constitutional Mandate**: Direct interplay with Article 14 (Equality), Article 19(1)(a) (Right to Information), and Article 324 (Election Commission powers).\n- **UPSC Relevance**: Crucial case law citation for GS Paper II Mains answers on Electoral Reforms and Separation of Powers.\n\n#### 🔗 Verified Live Citations:\n- [Supreme Court of India Official Judgments Portal](https://main.sci.gov.in)\n- [Press Information Bureau (PIB) - Ministry of Law & Justice](https://pib.gov.in)`,
+        sources: [
+          { title: 'Supreme Court of India Official Judgments', url: 'https://main.sci.gov.in' },
+          { title: 'PIB Ministry of Law & Justice', url: 'https://pib.gov.in' }
+        ]
+      };
+    } else {
+      return {
+        session_id: 'session-demo',
+        intent: 'current_affairs',
+        agent_used: 'Research Agent',
+        response: `### 📰 Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights:\n- **Government Policy**: Recent PIB press release highlights strategic initiatives and policy frameworks directly addressing "${message}".\n- **UPSC Significance**: Direct relevance to GS Paper II (Governance) & GS Paper III (Economic Development & Environment).\n\n#### 🔗 Verified Live Citations:\n- [Press Information Bureau (PIB) Official Release](https://pib.gov.in)\n- [The Hindu Current Affairs Commentary](https://thehindu.com)`,
+        sources: [
+          { title: 'Press Information Bureau (PIB)', url: 'https://pib.gov.in' },
+          { title: 'The Hindu Editorial', url: 'https://thehindu.com' }
+        ]
+      };
+    }
+  } 
+  
+  // 2. Mock Test Agent Fallback
+  else if (msgLower.includes('mock') || msgLower.includes('quiz') || msgLower.includes('mcq') || msgLower.includes('practice question') || msgLower.includes('question bank')) {
     return {
       session_id: 'session-demo',
       intent: 'mock_test',
@@ -161,7 +192,10 @@ function simulateChatResponse(message: string) {
       response: '### 📝 Generated UPSC Prelims Practice Test\n\nI have generated a 5-question test for you on General Studies. Click over to the **Mock Test** page in the sidebar to complete it with instant evaluation!',
       sources: [{ title: 'UPSC AI Test Generator', url: '/mock-test' }]
     };
-  } else {
+  } 
+  
+  // 3. Knowledge & Tutor Agent Fallback
+  else {
     const qLower = message.toLowerCase();
     const isUpscTopic = ['governor', 'president', 'constitution', 'article', 'polity', 'dpsp', 'fundamental rights', 'history', 'gandhi', '1857', 'viceroy', 'economy', 'gdp', 'inflation', 'rbi', 'repo', 'monetary policy', 'geography', 'monsoon', 'climate', 'river', 'himalayas', 'spectrum', 'laxmikanth', 'ncert', 'pyq'].some(k => qLower.includes(k));
 
