@@ -39,6 +39,30 @@ async def list_documents(current_user: dict = Depends(get_current_user)):
                 "created_at": "2025-01-10T10:00:00Z"
             },
             {
+                "id": "doc-1b",
+                "title": "Constitution of India (Full Bare Act - Articles 1-395)",
+                "category": "Polity",
+                "file_size": 16800000,
+                "is_global": True,
+                "created_at": "2025-01-11T10:00:00Z"
+            },
+            {
+                "id": "doc-1c",
+                "title": "Sarkaria & Punchhi Commission Reports on Centre-State Relations",
+                "category": "Polity",
+                "file_size": 11500000,
+                "is_global": True,
+                "created_at": "2025-01-15T10:00:00Z"
+            },
+            {
+                "id": "doc-1d",
+                "title": "22nd Law Commission Reports & Electoral Reforms Digest",
+                "category": "Polity",
+                "file_size": 9400000,
+                "is_global": True,
+                "created_at": "2025-01-20T10:00:00Z"
+            },
+            {
                 "id": "doc-2",
                 "title": "Modern History - Spectrum (2024 Edition)",
                 "category": "History",
