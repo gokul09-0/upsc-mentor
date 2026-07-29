@@ -27,10 +27,6 @@ interface Message {
 }
 
 function ChatPageContent() {
-  const searchParams = useSearchParams();
-  const initialQuery = searchParams ? searchParams.get('q') : null;
-  const initialHandledRef = useRef(false);
-
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome-msg',
@@ -104,13 +100,17 @@ How can I help your preparation today?`,
     }
   };
 
+  const searchParams = useSearchParams();
+  const queryParam = searchParams ? searchParams.get('q') : null;
+  const initialHandledRef = useRef<string | null>(null);
+
   // Automatically execute query when user comes from "Resume Lesson" or external links with ?q=...
   useEffect(() => {
-    if (initialQuery && !initialHandledRef.current) {
-      initialHandledRef.current = true;
-      handleSend(initialQuery);
+    if (queryParam && initialHandledRef.current !== queryParam) {
+      initialHandledRef.current = queryParam;
+      handleSend(queryParam);
     }
-  }, [initialQuery]);
+  }, [queryParam]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
