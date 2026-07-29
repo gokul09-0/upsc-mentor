@@ -194,29 +194,84 @@ function simulateChatResponse(message: string) {
     };
   } 
   
-  // 3. Knowledge & Tutor Agent Fallback
+  // 3. Knowledge & Tutor Agent Fallback (RAG Concept Queries)
   else {
     const qLower = message.toLowerCase();
-    const isUpscTopic = ['governor', 'president', 'constitution', 'article', 'polity', 'dpsp', 'fundamental rights', 'history', 'gandhi', '1857', 'viceroy', 'economy', 'gdp', 'inflation', 'rbi', 'repo', 'monetary policy', 'geography', 'monsoon', 'climate', 'river', 'himalayas', 'spectrum', 'laxmikanth', 'ncert', 'pyq'].some(k => qLower.includes(k));
 
-    if (isUpscTopic) {
+    // Extract document title if prompt is "Ask Knowledge Agent about <Doc Title>"
+    let docTitleFromPrompt = '';
+    if (qLower.includes('about ')) {
+      docTitleFromPrompt = message.substring(message.toLowerCase().indexOf('about ') + 6).trim();
+    }
+
+    // A. History / Spectrum
+    if (qLower.includes('history') || qLower.includes('spectrum') || qLower.includes('gandhi') || qLower.includes('1857') || qLower.includes('viceroy')) {
+      const docName = docTitleFromPrompt || 'Modern History - Spectrum (2024 Edition)';
       return {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### 📌 UPSC Concept Analysis: ${message}\n\n#### 1. Core Definition & Background\nUnder the Indian Constitutional framework, this concept forms a vital pillar of governance and institutional integrity.\n\n#### 2. Key Provisions & Constitutional Articles\n- **Constitutional Basis**: Direct provisions under Articles 14, 19, and 21 ensuring rule of law and fundamental freedoms.\n- **Judicial Directives**: Landmark Supreme Court rulings emphasize constitutionalism and administrative accountability.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Mains Structuring**: Always introduce with constitutional definitions, use a flow diagram for structural provisions, and conclude with a forward-looking recommendation citing Law Commission reports.`,
+        response: `### 📌 UPSC Concept Analysis (GS-I History): ${message}\n\n#### 1. Core Background & Historical Context\nDuring the freedom struggle and constitutional developments in modern India, key events, movements, and administrative reforms reshaped the national movement.\n\n#### 2. Key Pillars & Mass Movements\n- **Socio-Religious & Political Awakening**: Growth of national consciousness, peasant revolts, and constitutional demands.\n- **Freedom Movement Phases**: Moderate Phase, Extremist Movement, and Gandhian Mass Movements (Non-Cooperation, Civil Disobedience, Quit India).\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Historical Analysis**: Always mention relevant dates, viceroys/governors-general, congress sessions, and socio-economic impacts.`,
         sources: [
-          { title: 'Indian Polity by M. Laxmikanth', page: 142 },
+          { title: docName, page: 112 },
+          { title: 'NCERT Class 12 Modern India (Bipan Chandra)', page: 64 }
+        ]
+      };
+    }
+    // B. Geography / Environment / NCERT
+    else if (qLower.includes('geography') || qLower.includes('climate') || qLower.includes('monsoon') || qLower.includes('river') || qLower.includes('himalayas')) {
+      const docName = docTitleFromPrompt || 'NCERT Class 11 Physical Geography';
+      return {
+        session_id: 'session-demo',
+        intent: 'concept',
+        agent_used: 'Tutor Agent',
+        response: `### 📌 UPSC Concept Analysis (GS-I / GS-III Geography): ${message}\n\n#### 1. Core Physical & Environmental Framework\nPhysical phenomena, atmospheric dynamics, and physiographic divisions govern climate patterns and ecological stability across the Indian subcontinent.\n\n#### 2. Key Features & Geographical Mechanics\n- **Atmospheric Circulation & Monsoons**: Inter-Tropical Convergence Zone (ITCZ) movement, Jet Streams, and El Niño / La Niña impacts.\n- **Physiography & Drainage**: Himalayan vs Peninsular river systems, soil classification, and biodiversity hotspots.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Spatial Representation**: Draw rough outline maps of India showing pressure belts, wind patterns, or river basins.`,
+        sources: [
+          { title: docName, page: 94 },
+          { title: 'Environment & Ecology Digest', page: 48 }
+        ]
+      };
+    }
+    // C. PYQs / Past Year Questions
+    else if (qLower.includes('pyq') || qLower.includes('solved') || qLower.includes('prelims')) {
+      const docName = docTitleFromPrompt || 'UPSC Prelims 10 Years Solved PYQs (2015-2024)';
+      return {
+        session_id: 'session-demo',
+        intent: 'concept',
+        agent_used: 'Tutor Agent',
+        response: `### 📌 UPSC PYQ Analysis & Question Trends: ${message}\n\n#### 1. Prelims Trend & Weightage Analysis\nPrevious 10 Years PYQ analysis reveals repeating core themes, high-yield elimination strategies, and conceptual traps.\n\n#### 2. Key Exam Insights & Option Elimination\n- **Theme Frequency**: 15-20% direct/indirect repetition of concepts from Constitutional law, Economic indicators, and Environmental conventions.\n- **Strategy**: Focus on standard definitions and watch out for extreme absolute statements in Prelims options.\n\n#### 3. 💡 UPSC Preparation Pro-Tip\n- **PYQ Revision**: Solve PYQs topic-wise to master option elimination techniques.`,
+        sources: [
+          { title: docName, page: 45 },
+          { title: 'UPSC Official Answer Key Database', page: 12 }
+        ]
+      };
+    }
+    // D. Polity / Constitution / Laxmikanth
+    else if (qLower.includes('polity') || qLower.includes('laxmikanth') || qLower.includes('governor') || qLower.includes('president') || qLower.includes('constitution') || qLower.includes('article') || qLower.includes('dpsp') || qLower.includes('rights')) {
+      const docName = docTitleFromPrompt || 'Indian Polity 6th Edition - M. Laxmikanth';
+      return {
+        session_id: 'session-demo',
+        intent: 'concept',
+        agent_used: 'Tutor Agent',
+        response: `### 📌 UPSC Concept Analysis (GS-II Polity): ${message}\n\n#### 1. Core Definition & Constitutional Background\nUnder the Indian Constitutional framework, this concept forms a vital pillar of democratic governance and institutional integrity.\n\n#### 2. Key Provisions & Constitutional Articles\n- **Constitutional Basis**: Direct provisions under Articles 14, 19, and 21 ensuring rule of law, separation of powers, and federal balance.\n- **Judicial Directives**: Landmark Supreme Court rulings emphasis constitutionalism, administrative accountability, and basic structure doctrine.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Mains Structuring**: Always introduce with constitutional definitions, quote landmark case laws, and conclude with forward-looking recommendations.`,
+        sources: [
+          { title: docName, page: 142 },
           { title: 'NCERT Class 11 Political Theory', page: 88 }
         ]
       };
-    } else {
+    }
+    // E. General Knowledge Base Fallback
+    else {
+      const docName = docTitleFromPrompt || 'Indexed UPSC Core Repository Document';
       return {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### ⚠️ Topic Not Found in UPSC Knowledge Base\n\nThe topic **"${message}"** does not exist in the indexed **UPSC Vector Repository** (Laxmikanth, NCERTs, Spectrum, PYQs) or your uploaded study materials.\n\n* 💡 **Recommendation**: Please ask a question directly related to the **UPSC Civil Services Syllabus** (Polity, History, Economy, Geography, Governance) or upload a PDF document using the **Upload PDF** button above to query it via RAG.`,
-        sources: []
+        response: `### 📌 UPSC Knowledge Base Analysis: ${message}\n\n#### 1. Overview & Context\nThis topic is indexed in your vectorized study repository and forms an integral part of the Civil Services syllabus.\n\n#### 2. Key Takeaways & Syllabus Relevance\n- **Core Theme**: High relevance for General Studies Paper I / Paper II / Paper III.\n- **Analytical Focus**: Examine underlying principles, structural provisions, and current implications.\n\n#### 3. 💡 Mains Answer Tip\n- Structure your response into clear subheadings: *Background, Key Features, Challenges, and Recommendations*.`,
+        sources: [
+          { title: docName, page: 15 },
+          { title: 'Standard UPSC Reference Notes', page: 30 }
+        ]
       };
     }
   }
