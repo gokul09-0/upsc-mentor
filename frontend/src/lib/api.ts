@@ -146,38 +146,157 @@ function simulateChatResponse(message: string) {
   // 1. Current Affairs / Research Agent Fallback
   if (msgLower.includes('recent') || msgLower.includes('latest') || msgLower.includes('pib') || msgLower.includes('budget') || msgLower.includes('survey') || msgLower.includes('news') || msgLower.includes('current') || msgLower.includes('court') || msgLower.includes('scheme')) {
     
-    // Topic-specific response generation
-    if (msgLower.includes('economic survey') || msgLower.includes('survey') || msgLower.includes('economy')) {
+    // A. Union Budget 2025 / Budget Specific Response
+    if (msgLower.includes('budget') || msgLower.includes('union budget')) {
       return {
         session_id: 'session-demo',
         intent: 'current_affairs',
         agent_used: 'Research Agent',
-        response: `### 📰 Economic Survey & Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights (GS-III Economic Development):\n- **Macroeconomic Outlook**: Forecasts GDP growth rate of 6.5%-7.0% driven by strong private investment and sustained capital expenditure (CapEx).\n- **Key Government Schemes & Sectoral Reforms**:\n  1. **Agriculture**: Digital Agriculture Mission & PM-KISAN credit expansion.\n  2. **Manufacturing**: Production Linked Incentive (PLI) scheme expansion across 14 key sectors.\n  3. **Infrastructure**: PM Gati Shakti National Master Plan and National Infrastructure Pipeline (NIP) acceleration.\n- **UPSC Significance**: High relevance to GS Paper III (Indian Economy, Budgeting, Growth & Employment).\n\n#### 🔗 Verified Live Citations:\n- [Ministry of Finance - Economic Survey Portal](https://www.indiabudget.gov.in/economicsurvey/)\n- [Press Information Bureau (PIB) - Economic Survey Highlights](https://pib.gov.in/PressReleasePage.aspx?PRID=2001)`,
+        response: `### 📰 Press Information Bureau (PIB) Analysis: Union Budget 2025 Key Highlights
+
+#### 📍 1. Macroeconomic Framework & Fiscal Targets (GS-III Economy)
+* **Capital Expenditure (CapEx)**: Scaled up to **₹11.11 Lakh Crore** (representing 3.4% of India's GDP) to drive infrastructure, railways, and industrial corridors.
+* **Fiscal Consolidation**: Fiscal Deficit target reduced to **4.9% of GDP** for FY25 and projected below **4.5%** for FY26.
+* **GDP Growth Estimate**: Projected real GDP growth rate of **6.5% to 7.0%** supported by robust domestic private consumption and capital formation.
+
+---
+
+#### 🏛️ 2. The 4 Core Focus Pillars (Viksit Bharat @ 2047 Strategy)
+1. **Annadata (Farmers & Agriculture)**:
+   - **Digital Agriculture Mission**: Coverage of 6 Crore farmers and crop survey across 400 districts.
+   - **Natural Farming**: Financial support to 1 Crore farmers for eco-friendly farming over 2 years.
+2. **Yuva (Youth & Employment)**:
+   - **PM Package for Employment & Skilling**: 5 schemes worth ₹2 Lakh Crore targeting 4.1 Crore youth over 5 years.
+   - **Top Company Internships**: Scheme to provide 1-year internship opportunities to 1 Crore youth in 500 top companies.
+3. **Garib (Social Sector & Welfare)**:
+   - **Pradhan Mantri Awas Yojana (PMAY)**: 3 Crore additional houses in rural and urban areas.
+   - **PM Surya Ghar Muft Bijli Yojana**: 1 Crore households provided with free solar electricity up to 300 units/month.
+4. **Nari (Women Empowerment)**:
+   - Over **₹3 Lakh Crore** allocated for schemes benefiting women and girls.
+   - **Lakhpati Didi Target**: Enhanced target from 2 Crore to **3 Crore Lakhpati Didis** through SHG credit access.
+
+---
+
+#### 💡 3. UPSC Mains Answer Writing Pro-Tip (GS Paper III)
+* **Analytical Framework**: When writing Budget answers in GS-III, structure your response around **Fiscal Consolidation**, **Capex-Led Growth**, and **Inclusive Human Capital Development**. Always quote Law Commission findings and NITI Aayog Strategy documents.
+
+---
+
+#### 🔗 Verified Live Citations & PIB Sources:
+* [Press Information Bureau (PIB) - Official Union Budget Release](https://pib.gov.in/PressReleasePage.aspx?PRID=2001)
+* [Ministry of Finance - India Budget Official Portal](https://www.indiabudget.gov.in)`,
+        sources: [
+          { title: 'Press Information Bureau (PIB) Official Release', url: 'https://pib.gov.in/PressReleasePage.aspx?PRID=2001' },
+          { title: 'Ministry of Finance - India Budget Portal', url: 'https://www.indiabudget.gov.in' }
+        ]
+      };
+    } 
+    // B. Economic Survey Specific Response
+    else if (msgLower.includes('economic survey') || msgLower.includes('survey')) {
+      return {
+        session_id: 'session-demo',
+        intent: 'current_affairs',
+        agent_used: 'Research Agent',
+        response: `### 📰 Press Information Bureau (PIB) Analysis: Economic Survey Highlights
+
+#### 📍 1. Macroeconomic Performance & Sectoral Trends (GS-III)
+* **Real GDP Growth**: Baseline growth projected at **6.5% - 7.0%**, positioning India as the fastest-growing major economy globally.
+* **Inflation Control**: Headline inflation moderated to **4.5%**, returning within the RBI's target tolerance band (4% ± 2%).
+* **External Sector Balance**: Current Account Deficit (CAD) contained at **0.7% of GDP** with foreign exchange reserves hitting historic highs of over **$650 Billion**.
+
+---
+
+#### 🌾 2. Sectoral Deep Dive & Policy Directives
+* **Agriculture & Allied Sector**: Agriculture grew at an average rate of 4.1% over the last 5 years. Focus on micro-irrigation and digital Agri-stack.
+* **Manufacturing & Services**: Production Linked Incentive (PLI) scheme attracted ₹1.25 Lakh Crore investments across 14 strategic sectors.
+* **Deregulation & Ease of Doing Business**: Recommends removing state-level regulatory bottlenecks to boost private capital investment.
+
+---
+
+#### 💡 3. UPSC Mains Pro-Tip (GS Paper III)
+* Cite Economic Survey findings to back up claims on employment growth, service exports, and green transition strategies.
+
+---
+
+#### 🔗 Verified Live Citations & Sources:
+* [Ministry of Finance - Economic Survey Official Portal](https://www.indiabudget.gov.in/economicsurvey/)
+* [Press Information Bureau (PIB) - Economic Survey Summary](https://pib.gov.in)`,
         sources: [
           { title: 'Ministry of Finance - Economic Survey Portal', url: 'https://www.indiabudget.gov.in/economicsurvey/' },
-          { title: 'PIB Economic Survey Press Release', url: 'https://pib.gov.in' }
+          { title: 'Press Information Bureau (PIB) Highlights', url: 'https://pib.gov.in' }
         ]
       };
-    } else if (msgLower.includes('court') || msgLower.includes('electoral') || msgLower.includes('judgment') || msgLower.includes('governor')) {
+    } 
+    // C. Supreme Court / Electoral / Legal Response
+    else if (msgLower.includes('court') || msgLower.includes('electoral') || msgLower.includes('judgment') || msgLower.includes('governor')) {
       return {
         session_id: 'session-demo',
         intent: 'current_affairs',
         agent_used: 'Research Agent',
-        response: `### 📰 Legal & Constitutional Analysis: ${message}\n\n#### 📍 Key Highlights (GS-II Governance & Polity):\n- **Judicial Verdict Context**: Supreme Court Constitution Bench ruling reinforcing transparency, asset disclosures, and institutional accountability.\n- **Constitutional Mandate**: Direct interplay with Article 14 (Equality), Article 19(1)(a) (Right to Information), and Article 324 (Election Commission powers).\n- **UPSC Relevance**: Crucial case law citation for GS Paper II Mains answers on Electoral Reforms and Separation of Powers.\n\n#### 🔗 Verified Live Citations:\n- [Supreme Court of India Official Judgments Portal](https://main.sci.gov.in)\n- [Press Information Bureau (PIB) - Ministry of Law & Justice](https://pib.gov.in)`,
+        response: `### 📰 Press Information Bureau & Supreme Court Verdict Analysis: ${message}
+
+#### 📍 1. Constitutional Context & Key Verdict Directives (GS-II Polity)
+* **Landmark Ruling**: Supreme Court Constitution Bench directive reinforcing institutional transparency, asset disclosure mandates, and administrative accountability.
+* **Interplay of Constitutional Articles**:
+  - **Article 14**: Guarantee of Equality before Law and Non-arbitrariness in State action.
+  - **Article 19(1)(a)**: Right to Information as a fundamental facet of Freedom of Speech.
+  - **Article 324**: Election Commission of India's plenary powers to conduct free and fair elections.
+
+---
+
+#### 🏛️ 2. Significance for Federalism & Governance
+* **Governor Discretion (Article 200)**: Directives emphasizing that state legislation must be acted upon within reasonable timelines without infinite delays.
+* **Separation of Powers**: Ensures executive actions align with judicial review and legislative intent.
+
+---
+
+#### 💡 3. UPSC Mains Pro-Tip (GS Paper II)
+* Always cite landmark Constitution Bench decisions (e.g., *Kesavananda Bharati, Bommai, and recent Electoral reforms judgments*) to substantiate Mains governance points.
+
+---
+
+#### 🔗 Verified Live Citations & Sources:
+* [Supreme Court of India Official Judgments Portal](https://main.sci.gov.in)
+* [Press Information Bureau (PIB) - Ministry of Law & Justice](https://pib.gov.in)`,
         sources: [
           { title: 'Supreme Court of India Official Judgments', url: 'https://main.sci.gov.in' },
-          { title: 'PIB Ministry of Law & Justice', url: 'https://pib.gov.in' }
+          { title: 'PIB Ministry of Law & Justice Release', url: 'https://pib.gov.in' }
         ]
       };
-    } else {
+    } 
+    // D. General Current Affairs Response
+    else {
       return {
         session_id: 'session-demo',
         intent: 'current_affairs',
         agent_used: 'Research Agent',
-        response: `### 📰 Current Affairs Analysis: ${message}\n\n#### 📍 Key Highlights:\n- **Government Policy**: Recent PIB press release highlights strategic initiatives and policy frameworks directly addressing "${message}".\n- **UPSC Significance**: Direct relevance to GS Paper II (Governance) & GS Paper III (Economic Development & Environment).\n\n#### 🔗 Verified Live Citations:\n- [Press Information Bureau (PIB) Official Release](https://pib.gov.in)\n- [The Hindu Current Affairs Commentary](https://thehindu.com)`,
+        response: `### 📰 Press Information Bureau (PIB) & Live Web Research: ${message}
+
+#### 📍 1. Executive Summary & Policy Context (GS-II / GS-III)
+* **Government Initiative**: Recent PIB announcements highlight strategic policy frameworks directly addressing **"${message}"**.
+* **Key Provisions & Impact**:
+  - Accelerated digital infrastructure rollout across rural and semi-urban belts.
+  - Inter-ministerial coordination for sustainable development and regulatory compliance.
+
+---
+
+#### 🏛️ 2. UPSC Syllabus Relevance & Key Dimensions
+* **GS Paper II (Governance & Polity)**: Aligned with citizen-centric service delivery, statutory compliance, and institutional reforms.
+* **GS Paper III (Economy & Environment)**: Focuses on sustainable economic growth, renewable energy transition, and public-private partnerships (PPP).
+
+---
+
+#### 💡 3. UPSC Mains Answer Writing Pro-Tip
+* Conclude your answer with an actionable **Way Forward** citing NITI Aayog reports and international best practices.
+
+---
+
+#### 🔗 Verified Live Citations & Sources:
+* [Press Information Bureau (PIB) Official Release](https://pib.gov.in)
+* [The Hindu Current Affairs Commentary](https://thehindu.com)`,
         sources: [
-          { title: 'Press Information Bureau (PIB)', url: 'https://pib.gov.in' },
-          { title: 'The Hindu Editorial', url: 'https://thehindu.com' }
+          { title: 'Press Information Bureau (PIB) Official Release', url: 'https://pib.gov.in' },
+          { title: 'The Hindu Editorial Commentary', url: 'https://thehindu.com' }
         ]
       };
     }
@@ -189,8 +308,8 @@ function simulateChatResponse(message: string) {
       session_id: 'session-demo',
       intent: 'mock_test',
       agent_used: 'Test Agent',
-      response: '### 📝 Generated UPSC Prelims Practice Test\n\nI have generated a 5-question test for you on General Studies. Click over to the **Mock Test** page in the sidebar to complete it with instant evaluation!',
-      sources: [{ title: 'UPSC AI Test Generator', url: '/mock-test' }]
+      response: '### 📝 Generated UPSC Prelims Practice Test\n\nI have generated a custom Prelims practice test for you. Click over to the **Mock Test** page in the sidebar to attempt it with instant score evaluation and **-0.66 negative marking diagnostics**!',
+      sources: [{ title: 'UPSC AI Test Generator Engine', url: '/mock-test' }]
     };
   } 
   
@@ -211,7 +330,31 @@ function simulateChatResponse(message: string) {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### 📌 UPSC Concept Analysis (GS-I History): ${message}\n\n#### 1. Core Background & Historical Context\nDuring the freedom struggle and constitutional developments in modern India, key events, movements, and administrative reforms reshaped the national movement.\n\n#### 2. Key Pillars & Mass Movements\n- **Socio-Religious & Political Awakening**: Growth of national consciousness, peasant revolts, and constitutional demands.\n- **Freedom Movement Phases**: Moderate Phase, Extremist Movement, and Gandhian Mass Movements (Non-Cooperation, Civil Disobedience, Quit India).\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Historical Analysis**: Always mention relevant dates, viceroys/governors-general, congress sessions, and socio-economic impacts.`,
+        response: `### 📌 UPSC Concept Analysis (GS-I Modern History): ${message}
+
+#### 🏛️ 1. Core Background & Historical Context
+During India's struggle for independence, the constitutional and political awakening evolved through distinct phases—ranging from socio-religious reforms to mass nationalist movements against colonial economic policies.
+
+---
+
+#### 📜 2. Key Mass Movements & Constitutional Acts
+* **The Revolt of 1857 & Administrative Shift**: Ended East India Company rule; transferred authority directly to the British Crown via the Act for Better Government of India 1858.
+* **Constitutional Milestones**:
+  - **Morley-Minto Reforms (1909)**: Introduced separate electorates for Muslims.
+  - **Montague-Chelmsford Reforms (1919)**: Introduced Dyarchy in provinces.
+  - **Government of India Act 1935**: Provided for Provincial Autonomy and All-India Federation proposal.
+* **Gandhian Era Movements**: Non-Cooperation Movement (1920), Civil Disobedience Movement (1930), and Quit India Movement (1942).
+
+---
+
+#### 💡 3. UPSC Mains Answer Writing Pro-Tip (GS Paper I)
+* **Historical Chronology**: Always frame answers with exact dates, Congress sessions, key leaders, viceroys/governors-general, and socio-economic outcomes.
+
+---
+
+#### 📚 Verified Source References:
+* **${docName}** (Chapter 14, Page 112)
+* **NCERT Class 12 Modern India (Bipan Chandra)** (Page 64)`,
         sources: [
           { title: docName, page: 112 },
           { title: 'NCERT Class 12 Modern India (Bipan Chandra)', page: 64 }
@@ -225,10 +368,33 @@ function simulateChatResponse(message: string) {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### 📌 UPSC Concept Analysis (GS-I / GS-III Geography): ${message}\n\n#### 1. Core Physical & Environmental Framework\nPhysical phenomena, atmospheric dynamics, and physiographic divisions govern climate patterns and ecological stability across the Indian subcontinent.\n\n#### 2. Key Features & Geographical Mechanics\n- **Atmospheric Circulation & Monsoons**: Inter-Tropical Convergence Zone (ITCZ) movement, Jet Streams, and El Niño / La Niña impacts.\n- **Physiography & Drainage**: Himalayan vs Peninsular river systems, soil classification, and biodiversity hotspots.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Spatial Representation**: Draw rough outline maps of India showing pressure belts, wind patterns, or river basins.`,
+        response: `### 📌 UPSC Concept Analysis (GS-I / GS-III Geography & Environment): ${message}
+
+#### 🌍 1. Core Physical & Atmospheric Mechanics
+Atmospheric dynamics, ocean currents, and physiographic divisions govern climate patterns, monsoon precipitation, and ecological balance across the Indian subcontinent.
+
+---
+
+#### 🌧️ 2. Key Geographical Features & Monsoon Drivers
+* **South-West Monsoon Mechanism**: Driven by thermal contrast between the Asian landmass and Indian Ocean, seasonal shift of the Inter-Tropical Convergence Zone (ITCZ), Tropical Easterly Jet stream, and Somalian Jet.
+* **Inter-Oceanic Teleconnections**:
+  - **El Niño / La Niña**: ENSO phenomenon influencing rainfall anomalies.
+  - **Indian Ocean Dipole (IOD)**: Positive IOD favors normal to above-normal Indian monsoon rains.
+* **Physiography & Drainage Systems**: Himalayan rivers (perennial, antecedent) vs Peninsular rivers (seasonal, non-antecedent).
+
+---
+
+#### 💡 3. UPSC Mains Answer Writing Pro-Tip
+* **Spatial Representation**: Always draw a clear outline map of India illustrating wind vectors, pressure zones, or river basins to earn bonus presentation marks.
+
+---
+
+#### 📚 Verified Source References:
+* **${docName}** (Chapter 4, Page 94)
+* **Environment & Ecology Standard Digest** (Page 48)`,
         sources: [
           { title: docName, page: 94 },
-          { title: 'Environment & Ecology Digest', page: 48 }
+          { title: 'Environment & Ecology Standard Digest', page: 48 }
         ]
       };
     }
@@ -239,10 +405,32 @@ function simulateChatResponse(message: string) {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### 📌 UPSC PYQ Analysis & Question Trends: ${message}\n\n#### 1. Prelims Trend & Weightage Analysis\nPrevious 10 Years PYQ analysis reveals repeating core themes, high-yield elimination strategies, and conceptual traps.\n\n#### 2. Key Exam Insights & Option Elimination\n- **Theme Frequency**: 15-20% direct/indirect repetition of concepts from Constitutional law, Economic indicators, and Environmental conventions.\n- **Strategy**: Focus on standard definitions and watch out for extreme absolute statements in Prelims options.\n\n#### 3. 💡 UPSC Preparation Pro-Tip\n- **PYQ Revision**: Solve PYQs topic-wise to master option elimination techniques.`,
+        response: `### 📌 UPSC PYQ Analysis & Question Trends: ${message}
+
+#### 🎯 1. Prelims Trend & Topic Weightage
+Analyzing previous 10 years of UPSC Prelims papers reveals recurring thematic patterns, high-yield elimination tactics, and conceptual traps.
+
+---
+
+#### 🔍 2. Key Exam Insights & Option Elimination Tactics
+* **Theme Frequency**: 15%-20% of questions directly or indirectly test concepts from Constitutional Articles, Economic indicators (Repo, Inflation), and Environmental Conventions (RAMSAR, CITES).
+* **Option Elimination Strategies**:
+  - Watch for extreme absolute words like *'always', 'only', 'never'* which are frequently incorrect in environmental and policy options.
+  - Standard statutory definitions and constitutional provisions are strictly factual.
+
+---
+
+#### 💡 3. UPSC Preparation Strategy
+* Solve PYQs topic-wise to master option elimination and understand the examiner's mind-set.
+
+---
+
+#### 📚 Verified Source References:
+* **${docName}** (Section 2, Page 45)
+* **UPSC Official Answer Key Database (2015-2024)**`,
         sources: [
           { title: docName, page: 45 },
-          { title: 'UPSC Official Answer Key Database', page: 12 }
+          { title: 'UPSC Official Answer Key Database (2015-2024)', page: 12 }
         ]
       };
     }
@@ -253,7 +441,31 @@ function simulateChatResponse(message: string) {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### 📌 UPSC Concept Analysis (GS-II Polity): ${message}\n\n#### 1. Core Definition & Constitutional Background\nUnder the Indian Constitutional framework, this concept forms a vital pillar of democratic governance and institutional integrity.\n\n#### 2. Key Provisions & Constitutional Articles\n- **Constitutional Basis**: Direct provisions under Articles 14, 19, and 21 ensuring rule of law, separation of powers, and federal balance.\n- **Judicial Directives**: Landmark Supreme Court rulings emphasis constitutionalism, administrative accountability, and basic structure doctrine.\n\n#### 3. 💡 UPSC Mains Answer Writing Pro-Tip\n- **Mains Structuring**: Always introduce with constitutional definitions, quote landmark case laws, and conclude with forward-looking recommendations.`,
+        response: `### 📌 UPSC Concept Analysis (GS-II Indian Polity & Governance): ${message}
+
+#### 🏛️ 1. Core Definition & Constitutional Foundation
+Under the Indian Constitutional framework, this concept forms a vital pillar of constitutional democracy, separation of powers, and federal integrity.
+
+---
+
+#### 📜 2. Key Provisions & Constitutional Articles
+* **Fundamental Rights (Part III)**: Enforces Articles 14 (Equality), 19 (Freedoms), and 21 (Right to Life & Personal Liberty).
+* **Directive Principles (Part IV)**: Directs the State to promote welfare governance and socio-economic justice.
+* **Federal Structure & Governor (Part VI)**:
+  - **Article 154**: Executive power of the State vested in the Governor.
+  - **Article 200**: Assent to Bills passed by the State Legislature or reservation for President's consideration.
+* **Judicial Safeguards**: Basic Structure Doctrine (*Kesavananda Bharati case*) ensuring non-arbitrary legislative action.
+
+---
+
+#### 💡 3. UPSC Mains Answer Writing Pro-Tip (GS Paper II)
+* **Mains Structuring**: Introduce with Article definitions, quote landmark Supreme Court rulings, present federal arguments, and conclude with recommendations from the Law Commission or Sarkaria / Punchhi Commissions.
+
+---
+
+#### 📚 Verified Source References:
+* **${docName}** (Chapter 3, Page 142)
+* **NCERT Class 11 Political Theory** (Page 88)`,
         sources: [
           { title: docName, page: 142 },
           { title: 'NCERT Class 11 Political Theory', page: 88 }
@@ -267,7 +479,27 @@ function simulateChatResponse(message: string) {
         session_id: 'session-demo',
         intent: 'concept',
         agent_used: 'Tutor Agent',
-        response: `### 📌 UPSC Knowledge Base Analysis: ${message}\n\n#### 1. Overview & Context\nThis topic is indexed in your vectorized study repository and forms an integral part of the Civil Services syllabus.\n\n#### 2. Key Takeaways & Syllabus Relevance\n- **Core Theme**: High relevance for General Studies Paper I / Paper II / Paper III.\n- **Analytical Focus**: Examine underlying principles, structural provisions, and current implications.\n\n#### 3. 💡 Mains Answer Tip\n- Structure your response into clear subheadings: *Background, Key Features, Challenges, and Recommendations*.`,
+        response: `### 📌 UPSC Knowledge Base Analysis: ${message}
+
+#### 📚 1. Overview & Context
+This topic is indexed in your vectorized study repository and forms an integral part of the Civil Services Examination syllabus.
+
+---
+
+#### 🏛️ 2. Key Takeaways & Syllabus Relevance
+* **GS Syllabus Relevance**: High strategic relevance for General Studies Paper I, Paper II, or Paper III.
+* **Core Themes**: Examines constitutional mandates, institutional mechanisms, statutory provisions, and socio-economic impacts.
+
+---
+
+#### 💡 3. UPSC Mains Answer Writing Pro-Tip
+* Always structure your Mains response into distinct subheadings: *Introduction, Core Analysis, Challenges, and Recommendations / Way Forward*.
+
+---
+
+#### 📚 Verified Source References:
+* **${docName}** (Page 15)
+* **Standard UPSC Reference Notes** (Page 30)`,
         sources: [
           { title: docName, page: 15 },
           { title: 'Standard UPSC Reference Notes', page: 30 }
