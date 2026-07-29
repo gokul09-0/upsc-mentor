@@ -1,8 +1,6 @@
 # 🏛️ UPSC AI Mentor - Production AI Preparation Platform
 
-![UPSC AI Mentor Banner](https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1200&q=80)
-
-> **Final-Year Engineering Project & Production Blueprint**  
+  Production Blueprint
 > Built following the complete **AI Software Development Life Cycle (AI SDLC)** with a production multi-agent architecture using **LangGraph**, **FastAPI**, **Next.js 14**, **Supabase pgvector**, **Tavily Web Search**, and **LangSmith**.
 
 ---
@@ -119,4 +117,4 @@ npm run dev
 ---
 
 ## 📜 License
-Developed for Final Year Engineering Project & Production Deployment. Open Source MIT License.
+Developed for Production Deployment. Open Source MIT License.
