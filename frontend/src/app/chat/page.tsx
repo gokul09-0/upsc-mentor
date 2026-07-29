@@ -104,11 +104,27 @@ How can I help your preparation today?`,
   const queryParam = searchParams ? searchParams.get('q') : null;
   const initialHandledRef = useRef<string | null>(null);
 
-  // Automatically execute query when user comes from "Resume Lesson" or external links with ?q=...
+  // Automatically type out and send query when user comes from "Ask Agent" or links with ?q=...
   useEffect(() => {
     if (queryParam && initialHandledRef.current !== queryParam) {
       initialHandledRef.current = queryParam;
-      handleSend(queryParam);
+      let currentIndex = 0;
+      setInput('');
+
+      const typingInterval = setInterval(() => {
+        if (currentIndex < queryParam.length) {
+          setInput(queryParam.slice(0, currentIndex + 1));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setTimeout(() => {
+            handleSend(queryParam);
+            setInput('');
+          }, 350);
+        }
+      }, 18);
+
+      return () => clearInterval(typingInterval);
     }
   }, [queryParam]);
 

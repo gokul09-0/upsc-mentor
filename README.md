@@ -1,6 +1,7 @@
 # 🏛️ UPSC AI Mentor - Production AI Preparation Platform
 
-  Production Blueprint
+> **Production Blueprint**  
+
 > Built following the complete **AI Software Development Life Cycle (AI SDLC)** with a production multi-agent architecture using **LangGraph**, **FastAPI**, **Next.js 14**, **Supabase pgvector**, **Tavily Web Search**, and **LangSmith**.
 
 ---
