@@ -17,8 +17,9 @@ class IntentRouter:
     def __init__(self) -> None:
         self.llm = ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
-            model=settings.PRIMARY_MODEL,
-            temperature=0.0
+            model="gpt-4o",
+            temperature=0.2,
+            max_tokens=1200
         )
 
     def classify_intent(self, query: Optional[str]) -> str:

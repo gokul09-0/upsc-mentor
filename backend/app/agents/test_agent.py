@@ -20,8 +20,9 @@ class TestAgent:
     def __init__(self):
         self.llm = ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
-            model=settings.PRIMARY_MODEL,
-            temperature=0.4
+            model="gpt-4o",
+            temperature=0.2,
+            max_tokens=1200
         )
 
     def generate_mock_test(self, subject: str, difficulty: str, count: int = 5) -> Dict[str, Any]:

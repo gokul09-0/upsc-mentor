@@ -298,22 +298,40 @@ function simulateChatResponse(message: string) {
         agent_used: 'Research Agent',
         response: `### 📰 Press Information Bureau (PIB) & Live Web Research: ${message}
 
-#### 📍 1. Executive Summary & Policy Context (GS-II / GS-III)
-* **Government Initiative**: Recent PIB announcements highlight strategic policy frameworks directly addressing **"${message}"**.
-* **Key Provisions & Impact**:
-  - Accelerated digital infrastructure rollout across rural and semi-urban belts.
-  - Inter-ministerial coordination for sustainable development and regulatory compliance.
+#### 📍 1. Executive Summary & Strategic Policy Context (GS-II / GS-III)
+* **Government Policy Directive**: Recent official notifications and Press Information Bureau (PIB) releases highlight comprehensive policy frameworks addressing **"${message}"**.
+* **Key Interventions & Institutional Targets**:
+  - Accelerated infrastructure deployment and digital public infrastructure (DPI) expansion across rural and semi-urban districts.
+  - Inter-ministerial convergence between Ministry of Finance, NITI Aayog, and sector-specific line ministries to achieve targeted socio-economic indicators.
 
 ---
 
-#### 🏛️ 2. UPSC Syllabus Relevance & Key Dimensions
-* **GS Paper II (Governance & Polity)**: Aligned with citizen-centric service delivery, statutory compliance, and institutional reforms.
-* **GS Paper III (Economy & Environment)**: Focuses on sustainable economic growth, renewable energy transition, and public-private partnerships (PPP).
+#### 📊 2. Core Pillars & Key Policy Data
+* **Financial & Structural Allocations**: Enhanced capital outlay to drive sustainable economic growth, green transition, and human resource development.
+* **Governance Directives**: Implementation of direct benefit transfers (DBT), transparent monitoring dashboards, and statutory compliance checks.
 
 ---
 
-#### 💡 3. UPSC Mains Answer Writing Pro-Tip
-* Conclude your answer with an actionable **Way Forward** citing NITI Aayog reports and international best practices.
+#### 🏛️ 3. UPSC Syllabus Relevance & Paper Mapping
+* **GS Paper II (Polity & Governance)**: Direct alignment with citizen-centric governance, statutory authority mandates, and federal balance.
+* **GS Paper III (Economic Development & Environment)**: High relevance for inclusive growth, fiscal consolidation targets, and climate resilience frameworks.
+
+---
+
+#### ⚖️ 4. Key Challenges & Concerns
+* **Implementation Hurdles**: State-level execution delays, capacity constraints in local government bodies, and monitoring bottlenecks.
+* **Financial Sustainability**: Balancing capital expenditure imperatives with long-term fiscal deficit targets.
+
+---
+
+#### 🚀 5. Balanced Way Forward
+* **NITI Aayog Strategy**: Adopt a multi-stakeholder governance model, leveraging public-private partnerships (PPP) and real-time data analytics.
+* **Capacity Building**: Strengthen local administrative machinery and promote outcome-based monitoring.
+
+---
+
+#### 💡 6. UPSC Mains Answer Writing Pro-Tip
+* Structure your Mains answer around distinct sub-headings: *Background Context, Key Policy Pillars, Implementation Bottlenecks, and NITI Aayog Strategy for Viksit Bharat @ 2047*.
 
 ---
 
