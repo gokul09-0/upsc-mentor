@@ -23,7 +23,7 @@ export async function sendChatMessage(message: string, sessionId?: string, subje
 
 export async function fetchDocuments() {
   try {
-    const res = await fetch(`${API_BASE_URL}/documents/list`);
+    const res = await fetch(`${API_BASE_URL}/documents/list`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch documents');
     return await res.json();
   } catch (error) {
@@ -140,7 +140,7 @@ export async function evaluateMockTest(questions: any[], userAnswers: Record<str
 
 export async function fetchProgressSummary() {
   try {
-    const res = await fetch(`${API_BASE_URL}/progress/summary`);
+    const res = await fetch(`${API_BASE_URL}/progress/summary`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch progress');
     return await res.json();
   } catch (error) {
